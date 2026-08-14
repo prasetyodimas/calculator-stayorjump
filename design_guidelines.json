@@ -1,0 +1,164 @@
+{
+  "project_name": "StayOrJump - Kalkulator Pesangon & Karir UU Cipta Kerja",
+  "app_type": "financial_calculator",
+  "design_archetype": "Swiss High-Contrast Performance & Financial Trust Fusion",
+  "theme": {
+    "default_mode": "light",
+    "toggle_supported": true,
+    "light_colors": {
+      "bg_primary": "#F8FAFC",
+      "bg_secondary": "#FFFFFF",
+      "bg_card": "#FFFFFF",
+      "bg_muted": "#F1F5F9",
+      "text_primary": "#0F172A",
+      "text_secondary": "#475569",
+      "text_muted": "#64748B",
+      "border": "#E2E8F0",
+      "primary": "#059669",
+      "primary_hover": "#047857",
+      "primary_light": "#ECFDF5",
+      "accent_crimson": "#DC2626",
+      "accent_crimson_light": "#FEF2F2",
+      "accent_amber": "#D97706",
+      "accent_amber_light": "#FFFBEB",
+      "accent_blue": "#2563EB",
+      "accent_blue_light": "#EFF6FF"
+    },
+    "dark_colors": {
+      "bg_primary": "#0F172A",
+      "bg_secondary": "#1E293B",
+      "bg_card": "#1E293B",
+      "bg_muted": "#334155",
+      "text_primary": "#F8FAFC",
+      "text_secondary": "#CBD5E1",
+      "text_muted": "#94A3B8",
+      "border": "#334155",
+      "primary": "#10B981",
+      "primary_hover": "#059669",
+      "primary_light": "rgba(16, 185, 129, 0.15)",
+      "accent_crimson": "#EF4444",
+      "accent_crimson_light": "rgba(239, 68, 68, 0.15)",
+      "accent_amber": "#F59E0B",
+      "accent_amber_light": "rgba(245, 158, 11, 0.15)",
+      "accent_blue": "#3B82F6",
+      "accent_blue_light": "rgba(59, 130, 246, 0.15)"
+    }
+  },
+  "typography": {
+    "font_family_heading": "'Plus Jakarta Sans', 'Outfit', sans-serif",
+    "font_family_body": "'Plus Jakarta Sans', sans-serif",
+    "font_family_mono": "'JetBrains Mono', 'Fira Code', monospace",
+    "scale": {
+      "h1": "text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight",
+      "h2": "text-2xl sm:text-3xl font-bold tracking-tight",
+      "h3": "text-xl sm:text-2xl font-semibold",
+      "h4": "text-lg font-semibold",
+      "body_lg": "text-lg leading-relaxed",
+      "body": "text-base leading-normal",
+      "small": "text-sm text-muted-foreground",
+      "tiny": "text-xs font-medium uppercase tracking-wider"
+    }
+  },
+  "spacing_and_layout": {
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "card_padding": "p-5 sm:p-7",
+    "section_gap": "space-y-8 sm:space-y-12",
+    "bento_grid": "grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8"
+  },
+  "visual_enhancers": {
+    "border_style": "1px solid var(--border)",
+    "shadows": {
+      "sm": "shadow-sm",
+      "md": "shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)]",
+      "lg": "shadow-[0_10px_30px_-4px_rgba(0,0,0,0.08)]",
+      "glass": "backdrop-blur-md bg-white/80 dark:bg-slate-900/80"
+    },
+    "gradients": {
+      "stay_emerald": "from-emerald-600 to-teal-700",
+      "move_crimson": "from-red-600 to-rose-700",
+      "neutral_slate": "from-slate-700 to-slate-900"
+    }
+  },
+  "image_urls": {
+    "hero_discussion": {
+      "url": "https://images.unsplash.com/photo-1681569685382-e75f0301584e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwyfHxpbmRvbmVzaWFuJTIwcHJvZmVzc2lvbmFsJTIwY29ycG9yYXRlJTIwZW1wbG95ZWUlMjBjYXJlZXIlMjBkaXNjdXNzaW9ufGVufDB8fHx8MTc4NjcyNTc4OXww&ixlib=rb-4.1.0&q=85",
+      "description": "Indonesian corporate discussion scene for hero banner / tips section"
+    },
+    "team_meeting": {
+      "url": "https://images.unsplash.com/photo-1672917187338-7f81ecac3d3f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwzfHxpbmRvbmVzaWFuJTIwcHJvZmVzc2lvbmFsJTIwY29ycG9yYXRlJTIwZW1wbG95ZWUlMjBjYXJlZXIlMjBkaXNjdXNzaW9ufGVufDB8fHx8MTc4NjcyNTc4OXww&ixlib=rb-4.1.0&q=85",
+      "description": "Professional team around office table"
+    }
+  },
+  "key_components": [
+    {
+      "name": "Header & Nav",
+      "description": "Sticky top bar with StayOrJump branding, PP 35/2021 badge, navigation tabs (Kalkulator, Komparasi, Proyeksi, Riwayat, Panduan Hukum), and Dark/Light toggle."
+    },
+    {
+      "name": "Input Form (Kalkulator Gaji & Benefits)",
+      "description": "Multi-tab/step or structured bento form for Gaji Pokok, Tunjangan Tetap, Masa Kerja (Tahun/Bulan), Benefits (BPJS TK, BPJS Kes, THR, Bonus, Asuransi, Transport/Makan), Alasan PHK/Resign dropdown with multiplier preview, and Tawaran Kantor Baru."
+    },
+    {
+      "name": "Worthit Score Meter",
+      "description": "Dynamic circular or arc gauge showing Worthit Stay Score (0-100), with prominent STAY / MOVE recommendation banner, rationale summary, and quick key metrics."
+    },
+    {
+      "name": "Breakdown Compensation Grid (UU Cipta Kerja)",
+      "description": "Itemized financial breakdown cards for Uang Pesangon (UP), Uang Penghargaan Masa Kerja (UPMK), Uang Penggantian Hak (UPH), total exit payout, and monthly/annual benefit comparison."
+    },
+    {
+      "name": "Projection Chart (Recharts)",
+      "description": "Interactive line/area chart comparing 5-10 year cumulative earnings trajectory between Staying vs Moving (incorporating raise %, severance buffer, and new offer)."
+    },
+    {
+      "name": "IndexedDB Calculation History",
+      "description": "Browser local persistent history storage list with filter, reload calculation, compare past entries, and delete actions."
+    },
+    {
+      "name": "PDF / Print Export View",
+      "description": "Clean print-optimized summary report layout formatted in Indonesian for official records or personal decision drafting."
+    }
+  ],
+  "testing_attributes": {
+    "header_nav": "data-testid='app-header'",
+    "theme_toggle": "data-testid='theme-toggle-button'",
+    "input_gaji_pokok": "data-testid='input-gaji-pokok'",
+    "input_tunjangan_tetap": "data-testid='input-tunjangan-tetap'",
+    "input_masa_kerja_tahun": "data-testid='input-masa-kerja-tahun'",
+    "input_masa_kerja_bulan": "data-testid='input-masa-kerja-bulan'",
+    "select_alasan_phk": "data-testid='select-alasan-phk'",
+    "input_thr": "data-testid='input-thr-multiplier'",
+    "input_bonus": "data-testid='input-bonus-tahunan'",
+    "input_gaji_baru": "data-testid='input-gaji-kantor-baru'",
+    "btn_hitung": "data-testid='button-hitung-pesangon'",
+    "worthit_score_display": "data-testid='worthit-score-meter'",
+    "recommendation_badge": "data-testid='recommendation-badge'",
+    "pesangon_total": "data-testid='total-pesangon-value'",
+    "upmk_total": "data-testid='upmk-value'",
+    "uph_total": "data-testid='uph-value'",
+    "btn_simpan_riwayat": "data-testid='button-simpan-riwayat'",
+    "btn_export_pdf": "data-testid='button-export-pdf'",
+    "history_list": "data-testid='history-list-container'",
+    "tab_kalkulator": "data-testid='tab-kalkulator'",
+    "tab_proyeksi": "data-testid='tab-proyeksi'",
+    "tab_riwayat": "data-testid='tab-riwayat'",
+    "tab_panduan": "data-testid='tab-panduan'"
+  },
+  "instructions_to_main_agent": [
+    "Ensure complete adherence to UU Cipta Kerja (PP 35/2021) formulas for Pesangon, UPMK, and UPH.",
+    "Formulas reference: UP (1-9 months base wage depending on years worked), UPMK (0-10 months wage for 3 to 24+ years worked), UPH (15% replacement rights or unused leave + transport home). Multipliers apply based on reason (e.g. Resign = 0x UP + UPH, PHK Efisiensi = 0.5x or 1x UP + 1x UPMK + UPH, Pensiun = 1.75x UP + 1x UPMK + UPH).",
+    "Format all monetary numbers into standard Indonesian Rupiah (e.g., Rp 15.000.000) using NumberFormat or custom utility.",
+    "Build a robust IndexedDB utility (using IDB or native IndexedDB API) so users can save calculation snapshots locally without login.",
+    "Provide interactive slider controls alongside numeric inputs for easy mobile tweaking.",
+    "Use Recharts ResponsiveContainer for fluid 5-10 year projection charts.",
+    "Include print/PDF styling (@media print) to render a pristine single-page executive career summary report.",
+    "Verify all interactive buttons, tabs, inputs, and results carry the designated data-testid attributes."
+  ],
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
+    "Avoid visual monotony: balance card surfaces, dense data tables, mono text figures, and vibrant status badges.",
+    "Do not center-align body text or numeric tables; keep left-aligned or tabular right-aligned for financial amounts.",
+    "Every state change (calculating, tab switching, saving to history) should have smooth transitions and micro-feedbacks using sonner toasts.",
+    "All containers with borders must feature padding p-4 to p-6 to prevent content collision.",
+    "Never hardcode mock sample calculations without clear clear/reset actions."
+  ]
+}

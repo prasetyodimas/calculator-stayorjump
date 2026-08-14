@@ -1,0 +1,22 @@
+{
+  "summary": "Frontend-only pesangon calculator tested end-to-end. Page load, theme toggle, form input with IDR formatting, calculation (efisiensi cegah rugi and resign scenarios), Worthit Score & recommendation badge, breakdown values (UP/UPMK/UPH), IndexedDB save-to-history flow, Panduan tab, Reset button, and mobile 375px viewport all worked correctly.",
+  "tested_scope": ["frontend", "integration"],
+  "passed": [
+    "Header + Hero 'Stay atau Jump?' + 3 tabs render, default tab-kalkulator with 'Isi form dulu, yuk.' panel",
+    "Theme toggle switches html.dark class correctly",
+    "IDR inputs auto-format with dot thousand separators (e.g., '10.000.000')",
+    "Calculate flow: gaji 10jt + tunjangan 2jt + 5y6m + efisiensi_cegah -> UP=Rp 72.000.000, UPMK=Rp 24.000.000, UPH=Rp 2.400.000, Total=Rp 98.400.000 (>96jt as expected)",
+    "Worthit meter (score=48) and recommendation-badge rendered",
+    "Save history -> history-list-container populated (card visible with data), tab-riwayat switch works",
+    "Resign scenario -> UP=0, UPMK=0 (matches PP 35/2021 rules)",
+    "Reset clears form (gaji-pokok empty) and empty results panel returns",
+    "Panduan tab renders content",
+    "Mobile viewport 375px: tabs and form still visible/usable"
+  ],
+  "failed": [],
+  "action_items": [],
+  "success_rate": {"backend": "N/A (skipped per request)", "frontend": "100%"},
+  "retest_needed": false,
+  "full_testing_deferred": true,
+  "notes": "Backend testing skipped per request (app is frontend-only, backend untouched boilerplate). Test credentials file not applicable (no auth). Chart proyeksi 5 tahun and PDF export not explicitly asserted but ResultsPanel rendered without errors."
+}
