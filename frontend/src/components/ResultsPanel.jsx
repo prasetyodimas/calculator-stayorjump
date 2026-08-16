@@ -4,7 +4,7 @@ import BreakdownGrid from "./BreakdownGrid";
 import ProjectionChart from "./ProjectionChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Save, Printer, Lightbulb } from "lucide-react";
+import { Save, Printer, Lightbulb, Share2 } from "lucide-react";
 import { formatIDR } from "@/lib/format";
 
 const ScoreRow = ({ label, value, max, color }) => (
@@ -24,7 +24,7 @@ const ScoreRow = ({ label, value, max, color }) => (
   </div>
 );
 
-export default function ResultsPanel({ result, onSave, onPrint }) {
+export default function ResultsPanel({ result, onSave, onPrint, onShare }) {
   if (!result) return null;
   const { pesangon, worthit } = result;
 
@@ -134,13 +134,22 @@ export default function ResultsPanel({ result, onSave, onPrint }) {
           Simpan ke Riwayat
         </Button>
         <Button
+          data-testid="button-bagikan-hasil"
+          onClick={onShare}
+          variant="outline"
+          className="flex-1 border-emerald-500/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/10"
+        >
+          <Share2 className="h-4 w-4 mr-2" />
+          Bagikan Hasil
+        </Button>
+        <Button
           data-testid="button-export-pdf"
           onClick={onPrint}
           variant="outline"
           className="flex-1"
         >
           <Printer className="h-4 w-4 mr-2" />
-          Cetak / Simpan PDF
+          Cetak / PDF
         </Button>
       </div>
     </div>

@@ -6,9 +6,11 @@ import InputForm from "@/components/InputForm";
 import ResultsPanel from "@/components/ResultsPanel";
 import HistoryList from "@/components/HistoryList";
 import LegalGuide from "@/components/LegalGuide";
+import SharedView from "@/components/SharedView";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { hitungPesangon, hitungWorthitScore } from "@/lib/pesangon";
 import { addCalculation } from "@/lib/idb";
+import { buildShareUrl, decodeShare } from "@/lib/share";
 import { Sparkles, Calculator, History, BookOpen } from "lucide-react";
 
 const DEFAULT_STATE = {
@@ -40,7 +42,19 @@ function App() {
   const [result, setResult] = useState(null);
   const [historyKey, setHistoryKey] = useState(0);
   const [activeTab, setActiveTab] = useState("kalkulator");
+  const [sharedPayload, setSharedPayload] = useState(null);
   const resultsRef = useRef(null);
+
+  // Detect ?s= share param on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const s = params.get("s");
+    if (s) {
+      const payload = decodeShare(s);
+      if (payload) setSharedPayload(payload);
+    }
+  }, []);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
@@ -88,6 +102,8 @@ function App() {
         recommendation: result.worthit.recommendation,
         recommendationLabel: result.worthit.recommendationLabel,
         recommendationColor: result.worthit.recommendationColor,
+        rationale: result.worthit.rationale,
+        breakdown: result.worthit.breakdown,
         stayFinal: result.worthit.stayFinal,
         moveFinal: result.worthit.moveFinal,
       },
@@ -108,6 +124,28 @@ function App() {
 
   const handlePrint = () => window.print();
 
+  const handleShare = async () => {
+    if (!result) return;
+    const url = buildShareUrl(result);
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Link bagikan disalin!", {
+        description:
+          "Gaji asli tidak ikut dibagikan. Tempel link di WA / email / DM.",
+      });
+    } catch {
+      window.prompt("Salin link bagikan:", url);
+    }
+  };
+
+  const handleExitShared = () => {
+    setSharedPayload(null);
+    // Clean URL
+    if (typeof window !== "undefined") {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  };
+
   const heroStats = useMemo(
     () => [
       { label: "Berdasarkan", value: "PP 35/2021" },
@@ -119,7 +157,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background text-foreground relative noise-bg">
-      <Header theme={theme} toggleTheme={toggleTheme} />
+      {sharedPayload ? (
+        <SharedView payload={sharedPayload} onExit={handleExitShared} />
+      ) : (
+        <>
+          <Header theme={theme} toggleTheme={toggleTheme} />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
         {/* Hero */}
@@ -194,6 +236,7 @@ function App() {
                     result={result}
                     onSave={handleSave}
                     onPrint={handlePrint}
+                    onShare={handleShare}
                   />
                 ) : (
                   <EmptyResults />
@@ -218,6 +261,8 @@ function App() {
           </p>
         </footer>
       </main>
+        </>
+      )}
 
       <Toaster position="top-right" richColors closeButton />
     </div>
