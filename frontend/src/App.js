@@ -8,11 +8,12 @@ import HistoryList from "@/components/HistoryList";
 import LegalGuide from "@/components/LegalGuide";
 import SharedView from "@/components/SharedView";
 import ShareDialog from "@/components/ShareDialog";
+import BpjsCalculator from "@/components/BpjsCalculator";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { hitungPesangon, hitungWorthitScore } from "@/lib/pesangon";
 import { addCalculation } from "@/lib/idb";
 import { buildShareUrl, decodeShare } from "@/lib/share";
-import { Sparkles, Calculator, History, BookOpen } from "lucide-react";
+import { Sparkles, Calculator, History, BookOpen, PiggyBank } from "lucide-react";
 
 const DEFAULT_STATE = {
   gajiPokok: 0,
@@ -180,9 +181,10 @@ function App() {
               Hitung dulu <span className="italic font-light">worth-it</span>-nya.
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground mt-4 leading-relaxed">
-              Kalkulator pesangon resmi berbasis PP No. 35 Tahun 2021 plus
-              analisa <strong>Worthit Score</strong> untuk bantu Anda memutuskan
-              bertahan di kantor atau pindah ke tawaran baru.
+              Kalkulator pesangon resmi berbasis PP No. 35 Tahun 2021, plus
+              analisa <strong>Worthit Score</strong> dan estimasi{" "}
+              <strong>JHT + Jaminan Pensiun</strong> untuk bantu Anda merencanakan
+              karir & masa depan.
             </p>
             <div className="flex flex-wrap gap-6 mt-6">
               {heroStats.map((s) => (
@@ -199,27 +201,38 @@ function App() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 max-w-md h-11 no-print">
+          <TabsList className="grid w-full grid-cols-4 max-w-2xl h-11 no-print">
             <TabsTrigger
               value="kalkulator"
               data-testid="tab-kalkulator"
               className="gap-1.5"
             >
-              <Calculator className="h-3.5 w-3.5" /> Kalkulator
+              <Calculator className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Pesangon</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="bpjs"
+              data-testid="tab-bpjs"
+              className="gap-1.5"
+            >
+              <PiggyBank className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">JHT & JP</span>
             </TabsTrigger>
             <TabsTrigger
               value="riwayat"
               data-testid="tab-riwayat"
               className="gap-1.5"
             >
-              <History className="h-3.5 w-3.5" /> Riwayat
+              <History className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Riwayat</span>
             </TabsTrigger>
             <TabsTrigger
               value="panduan"
               data-testid="tab-panduan"
               className="gap-1.5"
             >
-              <BookOpen className="h-3.5 w-3.5" /> Panduan
+              <BookOpen className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Panduan</span>
             </TabsTrigger>
           </TabsList>
 
@@ -250,6 +263,10 @@ function App() {
 
           <TabsContent value="riwayat" className="mt-6">
             <HistoryList refreshKey={historyKey} onLoad={handleLoad} />
+          </TabsContent>
+
+          <TabsContent value="bpjs" className="mt-6">
+            <BpjsCalculator />
           </TabsContent>
 
           <TabsContent value="panduan" className="mt-6">
