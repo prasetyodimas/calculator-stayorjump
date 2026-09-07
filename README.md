@@ -38,7 +38,7 @@ yarn install
 yarn start
 ```
 
-Aplikasi berjalan di **http://localhost:3000**.
+Aplikasi berjalan di **<http://localhost:3000>**.
 
 > **Penting:** kalkulator ini **frontend-only**. Seluruh perhitungan pesangon, JHT/JP,
 > Worthit Score, riwayat, dan share dijalankan di browser. Anda **tidak perlu**
@@ -86,7 +86,7 @@ mengembangkan fitur server-side (mis. sync riwayat cross-device).
    ```
 
    Cek: `curl http://localhost:8001/api/` → `{"message":"Hello World"}`
-   Dokumentasi otomatis: http://localhost:8001/docs
+   Dokumentasi otomatis: <http://localhost:8001/docs>
 
 > Catatan: `requirements.txt` berisi paket `emergentintegrations==0.2.0` yang berasal dari
 > generator (Emergent) dan mungkin tidak tersedia di PyPI publik. Kalau `pip install`
@@ -109,7 +109,7 @@ mengembangkan fitur server-side (mis. sync riwayat cross-device).
 
 ### 2.1 Arsitektur tingkat atas
 
-```
+```text
 ┌───────────────────────────────────────────────────────────────┐
 │                        BROWSER                                │
 │                                                               │
@@ -150,7 +150,7 @@ terjadi di sisi klien.
 
 ### 2.3 Struktur folder
 
-```
+```text
 .
 ├── frontend/
 │   ├── src/
@@ -192,7 +192,7 @@ terjadi di sisi klien.
 
 ### 2.4 Alur data (calculation pipeline)
 
-```
+```text
 InputForm (controlled)
    └─▶ App.state (satu objek flat: gajiPokok, masaKerja, alasanPHK, benefit, tawaranBaru…)
           │
@@ -218,7 +218,7 @@ mudah diuji dan tidak bergantung pada React.
 
 **Pesangon (`lib/pesangon.js`)**
 
-```
+```text
 Total = (UP × multiplier_UP) + (UPMK × multiplier_UPMK) + UPH + UangPisah
 ```
 
