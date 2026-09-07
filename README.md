@@ -18,19 +18,26 @@ Bahasa antarmuka: **Indonesia**. Semua data pengguna disimpan **di browser**, ti
 
 | Tool | Versi | Catatan |
 | --- | --- | --- |
-| Node.js | **18 atau 20 LTS** | wajib (React 19 + react-scripts 5) |
-| Yarn | 1.22.x (classic) | package manager yang dipakai repo ini (`packageManager` di `package.json`) |
+| Node.js | **18 atau 20 LTS** | wajib (React 19 + react-scripts 5). npm sudah otomatis terpasang bersama Node |
+| Yarn | 1.22.x (classic) | **direkomendasikan** — sesuai `packageManager` & `yarn.lock` repo ini |
+| npm | 9.x / 10.x | alternatif Yarn (lihat catatan `resolutions` di bawah) |
 | Python | 3.11+ | **opsional**, hanya untuk backend |
 | MongoDB | 6.x/7.x | **opsional**, hanya untuk backend |
 
 Cek instalasi:
 
 ```bash
-node -v      # v20.x
-yarn -v      # 1.22.x   (kalau belum: npm i -g yarn)
+node -v      # v20.x   (kalau belum ada: nvm install 20 && nvm use 20)
+npm -v       # 10.x
+yarn -v      # 1.22.x  (kalau belum ada: npm install -g yarn)
 ```
 
 ### Jalankan frontend (cukup ini saja untuk memakai semua fitur)
+
+Semua perintah dijalankan **dari dalam folder `frontend/`**, bukan dari root repo —
+`package.json` dan `yarn.lock` yang asli ada di sana (`yarn.lock` di root hanya stub kosong).
+
+#### Opsi A — Yarn (direkomendasikan)
 
 ```bash
 cd frontend
@@ -38,17 +45,53 @@ yarn install
 yarn start
 ```
 
-Aplikasi berjalan di **<http://localhost:3000>**.
+#### Opsi B — npm
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+> **Kenapa Yarn lebih disarankan?** `frontend/package.json` mendeklarasikan
+> `"packageManager": "yarn@1.22.22"` dan memakai field **`resolutions`** (± 40 paket
+> dipin untuk alasan keamanan, mis. `nth-check`, `webpack-dev-server`, `serialize-javascript`).
+> Field `resolutions` **hanya dibaca Yarn** — npm mengabaikannya dan memakai `overrides`,
+> jadi `npm install` akan melewati pin-pin tersebut dan menghasilkan dependency tree
+> yang berbeda. npm tetap bisa dipakai untuk development, tapi Yarn lebih aman & sesuai lockfile.
+
+Setelah `start` berjalan, aplikasi otomatis terbuka di browser pada
+**<http://localhost:3000>** dengan hot-reload aktif — simpan file, halaman refresh sendiri.
 
 > **Penting:** kalkulator ini **frontend-only**. Seluruh perhitungan pesangon, JHT/JP,
 > Worthit Score, riwayat, dan share dijalankan di browser. Anda **tidak perlu**
 > menjalankan backend atau MongoDB untuk memakai aplikasi.
 
-Perintah frontend lain:
+#### Script yang tersedia
+
+Diambil dari `scripts` di `frontend/package.json` — build system-nya **craco**
+(Create React App Configuration Override), bukan `react-scripts` langsung:
+
+| Script | Yarn | npm | Fungsi |
+| --- | --- | --- | --- |
+| `start` | `yarn start` | `npm start` | `craco start` — dev server + hot reload di port 3000 |
+| `build` | `yarn build` | `npm run build` | `craco build` — production build ke `frontend/build/` |
+| `test` | `yarn test` | `npm test` | `craco test` — test runner CRA/Jest (watch mode) |
+
+Contoh penggunaan:
 
 ```bash
-yarn build   # production build ke frontend/build
-yarn test    # test runner CRA (craco test)
+# development
+yarn start                 # atau: npm start
+PORT=3001 yarn start       # ganti port kalau 3000 dipakai
+
+# production build + preview hasilnya
+yarn build                 # atau: npm run build
+npx serve -s build         # cek hasil build di http://localhost:3000
+
+# test
+yarn test                  # atau: npm test
+CI=true yarn test          # sekali jalan, tanpa watch mode (untuk CI)
 ```
 
 ### Jalankan backend (opsional — boilerplate FastAPI)
@@ -280,7 +323,7 @@ yang akan membutuhkan autentikasi.
 
 ```bash
 # frontend
-cd frontend && yarn test
+cd frontend && yarn test      # atau: npm test
 
 # backend
 cd backend && pytest        # konfigurasi xdist sudah di pytest.ini, jangan tambah flag -n
@@ -295,7 +338,9 @@ Riwayat hasil testing tiap iterasi ada di `test_reports/*.json` dan ringkasannya
 ## 4. Build & Deploy
 
 ```bash
-cd frontend && yarn build     # output: frontend/build/
+cd frontend
+yarn build                    # atau: npm run build
+# output: frontend/build/
 ```
 
 Karena aplikasi frontend-only, `frontend/build/` bisa langsung dilayani sebagai static
