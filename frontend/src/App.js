@@ -7,6 +7,7 @@ import ResultsPanel from "@/components/ResultsPanel";
 import HistoryList from "@/components/HistoryList";
 import LegalGuide from "@/components/LegalGuide";
 import SharedView from "@/components/SharedView";
+import ShareDialog from "@/components/ShareDialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { hitungPesangon, hitungWorthitScore } from "@/lib/pesangon";
 import { addCalculation } from "@/lib/idb";
@@ -43,6 +44,7 @@ function App() {
   const [historyKey, setHistoryKey] = useState(0);
   const [activeTab, setActiveTab] = useState("kalkulator");
   const [sharedPayload, setSharedPayload] = useState(null);
+  const [shareDialog, setShareDialog] = useState({ open: false, url: "", meta: null });
   const resultsRef = useRef(null);
 
   // Detect ?s= share param on mount
@@ -124,18 +126,19 @@ function App() {
 
   const handlePrint = () => window.print();
 
-  const handleShare = async () => {
+  const handleShare = () => {
     if (!result) return;
     const url = buildShareUrl(result);
-    try {
-      await navigator.clipboard.writeText(url);
-      toast.success("Link bagikan disalin!", {
-        description:
-          "Gaji asli tidak ikut dibagikan. Tempel link di WA / email / DM.",
-      });
-    } catch {
-      window.prompt("Salin link bagikan:", url);
-    }
+    setShareDialog({
+      open: true,
+      url,
+      meta: {
+        score: result.worthit.score,
+        recommendation: result.worthit.recommendation,
+        recommendationLabel: result.worthit.recommendationLabel,
+        recommendationColor: result.worthit.recommendationColor,
+      },
+    });
   };
 
   const handleExitShared = () => {
@@ -263,6 +266,13 @@ function App() {
       </main>
         </>
       )}
+
+      <ShareDialog
+        open={shareDialog.open}
+        onOpenChange={(o) => setShareDialog((s) => ({ ...s, open: o }))}
+        url={shareDialog.url}
+        meta={shareDialog.meta}
+      />
 
       <Toaster position="top-right" richColors closeButton />
     </div>

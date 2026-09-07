@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import CompareDialog from "./CompareDialog";
+import ShareDialog from "./ShareDialog";
 import { buildShareUrl } from "@/lib/share";
 
 export default function HistoryList({ refreshKey, onLoad }) {
@@ -38,6 +39,7 @@ export default function HistoryList({ refreshKey, onLoad }) {
   const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState([]);
   const [compareOpen, setCompareOpen] = useState(false);
+  const [shareDialog, setShareDialog] = useState({ open: false, url: "", meta: null });
 
   const load = async () => {
     setLoading(true);
@@ -82,21 +84,22 @@ export default function HistoryList({ refreshKey, onLoad }) {
     load();
   };
 
-  const handleShare = async (item) => {
+  const handleShare = (item) => {
     const url = buildShareUrl({
       pesangon: item.pesangon,
       worthit: item.worthit,
       input: item.input,
     });
-    try {
-      await navigator.clipboard.writeText(url);
-      toast.success("Link bagikan disalin!", {
-        description:
-          "Gaji asli tidak ikut dibagikan. Tempel link di WA / email.",
-      });
-    } catch {
-      window.prompt("Salin link bagikan:", url);
-    }
+    setShareDialog({
+      open: true,
+      url,
+      meta: {
+        score: item.worthit.score,
+        recommendation: item.worthit.recommendation,
+        recommendationLabel: item.worthit.recommendationLabel,
+        recommendationColor: item.worthit.recommendationColor,
+      },
+    });
   };
 
   const itemA = items.find((i) => i.id === selectedIds[0]);
@@ -303,6 +306,13 @@ export default function HistoryList({ refreshKey, onLoad }) {
         onOpenChange={setCompareOpen}
         itemA={itemA}
         itemB={itemB}
+      />
+
+      <ShareDialog
+        open={shareDialog.open}
+        onOpenChange={(o) => setShareDialog((s) => ({ ...s, open: o }))}
+        url={shareDialog.url}
+        meta={shareDialog.meta}
       />
     </div>
   );
