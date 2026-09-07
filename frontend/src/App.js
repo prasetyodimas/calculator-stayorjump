@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo, useRef } from "react";
 import "@/App.css";
 import { Toaster, toast } from "sonner";
 import Header from "@/components/Header";
+import Landing from "@/components/Landing";
 import InputForm from "@/components/InputForm";
 import ResultsPanel from "@/components/ResultsPanel";
 import HistoryList from "@/components/HistoryList";
@@ -40,6 +41,7 @@ function App() {
     if (typeof window === "undefined") return "light";
     return localStorage.getItem("theme") || "light";
   });
+  const [view, setView] = useState("landing"); // "landing" | "app"
   const [state, setState] = useState(DEFAULT_STATE);
   const [result, setResult] = useState(null);
   const [historyKey, setHistoryKey] = useState(0);
@@ -56,7 +58,10 @@ function App() {
     if (s) {
       const payload = decodeShare(s);
       if (payload) setSharedPayload(payload);
+      return;
     }
+    // Deep-link: ?app=1 opens calculator directly
+    if (params.get("app") === "1") setView("app");
   }, []);
 
   useEffect(() => {
@@ -144,9 +149,24 @@ function App() {
 
   const handleExitShared = () => {
     setSharedPayload(null);
+    setView("app");
     // Clean URL
     if (typeof window !== "undefined") {
       window.history.replaceState({}, "", window.location.pathname);
+    }
+  };
+
+  const enterApp = () => {
+    setView("app");
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  };
+
+  const goHome = () => {
+    setView("landing");
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "instant" });
     }
   };
 
@@ -165,34 +185,44 @@ function App() {
         <SharedView payload={sharedPayload} onExit={handleExitShared} />
       ) : (
         <>
-          <Header theme={theme} toggleTheme={toggleTheme} />
+          <Header
+            theme={theme}
+            toggleTheme={toggleTheme}
+            view={view}
+            onBrandClick={goHome}
+            onCTAClick={enterApp}
+          />
 
+          {view === "landing" ? (
+            <>
+              <Landing onCTAClick={enterApp} />
+              <footer className="mt-8 pt-8 pb-10 border-t border-border text-xs text-muted-foreground text-center">
+                <p>
+                  StayOrJump · Estimasi berdasarkan PP 35/2021 · Data disimpan
+                  lokal di browser Anda
+                </p>
+              </footer>
+            </>
+          ) : (
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
-        {/* Hero */}
-        <section className="mb-10 no-print">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-semibold mb-4">
-              <Sparkles className="h-3 w-3" />
-              Kalkulator Legal Indonesia · UU Cipta Kerja
+        {/* Compact hero when in app view */}
+        <section className="mb-8 no-print">
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                Kalkulator Karir Anda
+              </h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                Pesangon, JHT, JP, dan analisa Worthit Score dalam satu dashboard.
+              </p>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.1]">
-              Stay atau <span className="text-emerald-600">Jump?</span>
-              <br />
-              Hitung dulu <span className="italic font-light">worth-it</span>-nya.
-            </h1>
-            <p className="text-base sm:text-lg text-muted-foreground mt-4 leading-relaxed">
-              Kalkulator pesangon resmi berbasis PP No. 35 Tahun 2021, plus
-              analisa <strong>Worthit Score</strong> dan estimasi{" "}
-              <strong>JHT + Jaminan Pensiun</strong> untuk bantu Anda merencanakan
-              karir & masa depan.
-            </p>
-            <div className="flex flex-wrap gap-6 mt-6">
+            <div className="flex flex-wrap gap-4">
               {heroStats.map((s) => (
                 <div key={s.label} className="flex flex-col">
-                  <span className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
+                  <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">
                     {s.label}
                   </span>
-                  <span className="text-lg font-bold num">{s.value}</span>
+                  <span className="text-sm font-bold num">{s.value}</span>
                 </div>
               ))}
             </div>
@@ -281,6 +311,7 @@ function App() {
           </p>
         </footer>
       </main>
+          )}
         </>
       )}
 
