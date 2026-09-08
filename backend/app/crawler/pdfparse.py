@@ -8,8 +8,9 @@ from typing import List, Optional
 logger = logging.getLogger(__name__)
 
 _MAX_ARTICLES = 400
-_PASAL_RE = re.compile(r"^\s*Pasal\s+(\d+[a-zA-Z]?(?:\s*\(\d+\))?)\s*$", re.MULTILINE)
-_PASAL_INLINE_RE = re.compile(r"\bPasal\s+(\d+[a-zA-Z]?)\b")
+# Heading pasal harus berada di awal baris (menghindari rujukan silang
+# seperti "Pasal 77 ayat (2)" di tengah isi pasal lain).
+_PASAL_INLINE_RE = re.compile(r"^\s*Pasal\s+(\d+[a-zA-Z]?)\b", re.MULTILINE)
 _BAB_RE = re.compile(r"^\s*BAB\s+([IVXLCDM]+)\b[^\n]*\n([^\n]*)", re.MULTILINE)
 
 

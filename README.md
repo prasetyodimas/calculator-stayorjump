@@ -94,12 +94,14 @@ yarn test                  # atau: npm test
 CI=true yarn test          # sekali jalan, tanpa watch mode (untuk CI)
 ```
 
-### Jalankan backend (opsional — boilerplate FastAPI)
+### Jalankan backend (opsional — API regulasi & crawler)
 
-Backend saat ini **belum dipakai oleh frontend**. Jalankan hanya jika Anda ingin
-mengembangkan fitur server-side (mis. sync riwayat cross-device).
+Backend menyediakan **REST API data pasal-pasal ketenagakerjaan** (UU 13/2003,
+UU 6/2023, PP 35/2021, dsb) beserta **crawler** dari `peraturan.bpk.go.id` dan
+`bpjsketenagakerjaan.go.id`. Belum dipakai oleh frontend.
 
-1. Pastikan MongoDB hidup:
+1. (Opsional) Nyalakan MongoDB. Tanpa MongoDB, backend otomatis memakai
+   **penyimpanan in-memory** (data hilang saat restart):
 
    ```bash
    # macOS (Homebrew)
@@ -116,9 +118,6 @@ mengembangkan fitur server-side (mis. sync riwayat cross-device).
    CORS_ORIGINS=http://localhost:3000
    ```
 
-   `MONGO_URL` dan `DB_NAME` **wajib** — `server.py` membacanya via `os.environ[...]`
-   dan akan crash saat startup kalau tidak ada.
-
 3. Install dependency & jalankan:
 
    ```bash
@@ -128,8 +127,19 @@ mengembangkan fitur server-side (mis. sync riwayat cross-device).
    uvicorn server:app --reload --port 8001
    ```
 
-   Cek: `curl http://localhost:8001/api/` → `{"message":"Hello World"}`
+   Saat koleksi kosong, data seed terkurasi (pasal-pasal kunci) dimuat otomatis.
+   Cek: `curl http://localhost:8001/api/regulations`
    Dokumentasi otomatis: <http://localhost:8001/docs>
+
+4. (Opsional) Jalankan crawler untuk mengambil teks resmi:
+
+   ```bash
+   curl -X POST "http://localhost:8001/api/crawl?scope=all"   # semua sumber
+   curl "http://localhost:8001/api/crawl/jobs"                # pantau status
+   ```
+
+   Scope tersedia: `all`, `bpk` (JDIH BPK: metadata + ekstraksi pasal dari PDF),
+   `bpjs_tk` (program & katalog peraturan BPJS TK), `seed` (data kurasi saja).
 
 > Catatan: `requirements.txt` berisi paket `emergentintegrations==0.2.0` yang berasal dari
 > generator (Emergent) dan mungkin tidak tersedia di PyPI publik. Kalau `pip install`
@@ -142,7 +152,7 @@ mengembangkan fitur server-side (mis. sync riwayat cross-device).
 | --- | --- |
 | `command not found: node` | Node belum terpasang. Install via [nvm](https://github.com/nvm-sh/nvm): `nvm install 20 && nvm use 20` |
 | Port 3000 dipakai | `PORT=3001 yarn start` |
-| `KeyError: 'MONGO_URL'` saat start backend | `backend/.env` belum dibuat (lihat langkah 2) |
+| Backend memakai `in-memory` di log | MongoDB mati/tidak ada; aman untuk dev, tapi data hilang saat restart. Nyalakan MongoDB untuk persistensi |
 | Riwayat hilang | Riwayat ada di IndexedDB per-browser/profil; mode incognito & clear site data akan menghapusnya |
 | `yarn install` lambat/gagal | Gunakan Yarn 1 (bukan Yarn 2+), dan hapus `node_modules` + retry |
 
@@ -300,19 +310,37 @@ dengan syarat minimum 15 tahun masa iur (di bawah itu → lump sum).
   versi tak dikenal → decode ditolak.
 - **Deep link**: `?app=1` membuka langsung tampilan kalkulator (skip landing).
 
-### 2.7 Backend (status: boilerplate)
+### 2.7 Backend (API regulasi + crawler)
 
-`backend/server.py` menyediakan:
+`backend/server.py` (FastAPI) menyediakan REST API data regulasi & pasal
+ketenagakerjaan. Sumber data: **peraturan.bpk.go.id** (JDIH BPK, termasuk
+ekstraksi pasal dari PDF resmi), **bpjsketenagakerjaan.go.id** (info program &
+katalog peraturan), dan **data seed terkurasi** (dimuat otomatis saat database
+kosong). Storage: MongoDB (Motor) jika tersedia, fallback in-memory.
 
 | Method | Endpoint | Fungsi |
 | --- | --- | --- |
-| GET | `/api/` | health check sederhana |
-| POST | `/api/status` | simpan `StatusCheck` ke MongoDB |
-| GET | `/api/status` | list `StatusCheck` (maks 1000) |
+| GET | `/api/regulations` | list regulasi (filter: `search`, `type`, `year`, `program`, `source`, paging) |
+| GET | `/api/regulations/{slug}` | detail regulasi beserta seluruh pasal |
+| GET | `/api/regulations/{slug}/articles` | pasal-pasal sebuah regulasi (filter `pasal=`) |
+| GET | `/api/regulations/articles/search` | cari pasal lintas regulasi (`search`, `pasal`, `program`) |
+| POST | `/api/crawl?scope=all` | trigger crawler (background job; `scope`: all/bpk/bpjs_tk/seed) |
+| GET | `/api/crawl/jobs` | riwayat & status job crawl |
+| GET | `/api/crawl/jobs/{id}` | detail satu job crawl |
+| GET | `/api/crawl/sources` | daftar sumber & target crawl |
+
+Contoh:
+
+```bash
+curl "http://localhost:8001/api/regulations?program=JHT"
+curl "http://localhost:8001/api/regulations/pp-35-2021/articles?pasal=40"
+curl "http://localhost:8001/api/regulations/articles/search?search=pesangon"
+```
 
 Semua route diberi prefix `/api` lewat `APIRouter` — konvensi ini memudahkan reverse
 proxy memisahkan API dari static frontend. CORS origin dibaca dari `CORS_ORIGINS`
-(comma-separated, default `*`).
+(comma-separated, default `*`). Endpoint legacy `/api/status` dari template awal
+masih tersedia.
 
 Rencana pemakaian backend ada di backlog (`memory/PRD.md`): sync riwayat cross-device,
 yang akan membutuhkan autentikasi.
